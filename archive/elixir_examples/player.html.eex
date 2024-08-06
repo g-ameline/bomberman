@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<script type="module">
+  import * as c from './g_crotch.js';
+  import * as s from './g_slough.js';
+  import * as b from './g_behavior.js';
+  import * as g from './g_gamepod.js';
+
+  const left_input = 'ArrowLeft'; // key 37 // this is key code for <=
+  const right_input = 'ArrowRight'; // 39 // this is key code for =>
+  const up_input = 'ArrowUp'; // key 38 // this is key code for <=
+  const down_input = 'ArrowDown'; // 40 // this is key code for =>
+  const bomb_input = 'Space'; // 32 // this is key code for ' '
+
+  const create_pad = () => {
+    const pad = g.pad()
+      // configure inputs
+      .left_key(left_input)
+      .right_key(right_input)
+      .up_key(up_input)
+      .down_key(down_input)
+      .bomb_key(bomb_input)
+      // ocnfigure web socket conenction
+      .sock(s.sock("<%= ws_protocol %>://localhost:<%= player_port %>/<%= ws_player_path%>"))
+      // behavior
+      .update_direction()
+      .update_bombing()
+      // activate 
+      .essentiate()
+      .actuate()
+    const game_frame = c.body().bear_child().essentiate()
+    const botouns = pad.make_botouns(game_frame)
+    botouns.forEach(botoun => display_button_overing_behavior())
+  }
+  create_pad()
+
+</script>

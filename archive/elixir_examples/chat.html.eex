@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<script type="module">
+  console.log("we are here")
+  import * as n from './g_crotch.js';
+  import * as s from './g_slough.js';
+  import * as b from './g_behavior.js';
+  console.log("we are there")
+  const chat_frame = n.body().bear_child('div').id("frame")
+  const init_chat_cycle = (chat_frame) => {
+    const enter_a_name = chat_frame.bear_child('input').id("your_name")
+      .other('placeholder', "pick a name dude")
+      .spawn()
+    init_chat_reaction(chat_frame, enter_a_name).actuate()
+  }
+  const init_chat_reaction = (chat_frame, enter_a_name) =>
+    b.reaction()
+      .kedge(enter_a_name)
+      .trigger('change')
+      .option(true) // once
+      .action(() => {
+        console.log("chat is starting initalization")
+        const [chat_box, socket, conversation_node, new_message_node] = create_chat_components(chat_frame)
+        name = enter_a_name.need_element().value
+        enter_a_name.eradicate()
+        chat_box.essentiate('lineage').render('lineage')
+        send_name_when_socket_ready_reaction(name, socket).actuate()
+        update_chat_from_socket_reaction(conversation_node, socket).actuate()
+        send_message_to_socket_reaction(new_message_node, socket).actuate()
+        close_chat_reaction(chat_frame, chat_box, socket).actuate()
+      })
+  const create_chat_components = (chat_frame) => {
+    const chat_box = chat_frame.bear_child('div').id("chat_box")
+    const socket = chat_box.bear_child(s.sock("ws://localhost:<%= chat_port %>/<%= chat_path%>"))
+    const conversation_node = chat_box.bear_child('div').id("conversation")
+    const new_message_node = chat_box.bear_child('input')
+      .id("new_message").other('placeholder', "type message here")
+    return [chat_box, socket, conversation_node, new_message_node]
+  }
+  const send_name_when_socket_ready_reaction = (name, socket) =>
+    b.reaction().kedge(socket).trigger('open')
+      .action(() => {
+        console.log("sending a name to server", name)
+        socket.need_element().send(JSON.stringify({name: name}))
+      })
+  const update_chat_from_socket_reaction = (conversation_node, socket) =>
+    b.reaction()
+      .kedge(socket)
+      .trigger('message')
+      .action((event) => {
+        const note_obj = JSON.parse(event.data)
+        const [name, message] = [note_obj.name, note_obj.message]
+        add_new_missive_to_conversation(conversation_node, name, message).essentiate().render()
+      })
+  const send_message_to_socket_reaction = (new_message_node, socket) =>
+    b.reaction()
+      .kedge(new_message_node)
+      .trigger('change')
+      .action((event) => {
+        const message = new_message_node.need_element().value
+        new_message_node.other('value', '')
+        const message_obj = JSON.stringify({message: message})
+        socket.need_element().send(message_obj)
+        new_message_node.render()
+      })
+  const close_chat_reaction = (chat_frame, chat_box, socket) =>
+    b.reaction()
+      .kedge(socket)
+      .trigger('close')
+      .option(true) //once
+      .action(() => {
+        console.log("websocket closed killing te chat")
+        chat_box.eradicate()
+        init_chat_cycle(chat_frame)
+      })
+  const add_new_missive_to_conversation = (conversation_node, name, missive) =>
+    conversation_node.bear_child().class('missive')
+      .add_child(n.node('div').text(name).class('sender'))
+      .add_child(n.node('div').text(missive).class('message'))
+  chat_frame.essentiate().render()
+  init_chat_cycle(chat_frame)
+  chat_frame.need_element().focus()
+
+</script>

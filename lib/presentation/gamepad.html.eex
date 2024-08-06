@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<body>
+  <img src="./favicon.ico" alt="alternatetext">
+</body>
+<script type="module">
+  import * as p from './gamepad.js';
+  const create_all_pads = (url) => {
+    const pad_column = p.create_button_container()
+    p.button_create_game_pad_wasd(url, pad_column)
+    p.button_create_game_pad_tfgh(url, pad_column)
+    p.button_create_game_pad_ijkl(url, pad_column)
+    p.button_create_game_pad_arrows(url, pad_column)
+  }
+  // import {create_pad, arrows_bindings, wasd_bindings} from './gamepad.js';
+  const url = "<%= ws_protocol %>://localhost:<%= ws_gamepad_port %>/<%= ws_gamepad_path%>"
+  create_all_pads(url)
+
+</script>

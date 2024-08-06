@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+
+<body>
+  <img src="./favicon.ico" alt="alternatetext">
+</body>
+<script type="module">
+  import {create_game_window} from './game.js';
+  const url = "<%= ws_protocol %>://localhost:<%= ws_game_port %>/<%= ws_game_path%>"
+  create_game_window(url)
+</script>

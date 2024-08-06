@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+
+<body>
+  <img src="./favicon.ico" alt="alternatetext">
+</body>
+<script type="module">
+  import {create_chat} from './chat.js';
+  const url = "<%= ws_protocol %>://localhost:<%= ws_chat_port %>/<%= ws_chat_path%>"
+  create_chat(url)
+</script>

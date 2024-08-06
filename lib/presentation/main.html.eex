@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<body>
+  <img src="./favicon.ico" alt="alternatetext">
+</body>
+<script type="module">
+  const chat_url = "<%= ws_protocol %>://localhost:<%= ws_chat_port %>/<%= ws_chat_path%>"
+  const pad_url = "<%= ws_protocol %>://localhost:<%= ws_gamepad_port %>/<%= ws_gamepad_path%>"
+  const display_url = "<%= ws_protocol %>://localhost:<%= ws_game_port %>/<%= ws_game_path%>"
+
+  import {create_chat_gamepads_display} from './main.js';
+  create_chat_gamepads_display(chat_url, pad_url, display_url)
+</script>
